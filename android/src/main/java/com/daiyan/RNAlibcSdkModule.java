@@ -28,8 +28,4 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   public void login(@Nullable Callback callback) {
     callback.invoke();
   }
-
-  @ReactMethod
-  public void login2() {
-  }
 }

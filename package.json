@@ -2,16 +2,22 @@
 {
   "name": "react-native-alibc-sdk",
   "version": "1.0.0",
-  "description": "",
+  "description": "React Native的阿里百川sdk， 包含淘宝授权登录等",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "alibc",
+    "sdk",
+    "alibaba",
+    "taobao",
+    "baichuan",
+    "login"
   ],
-  "author": "",
-  "license": "",
+  "author": "张岱岩(Daiyan Zhang)",
+  "license": "MIT",
   "peerDependencies": {
     "react-native": "^0.41.2"
   }

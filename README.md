@@ -1,6 +1,9 @@
 
 # react-native-alibc-sdk
 
+目前项目已经实现的功能有：淘宝登录授权
+其它功能正在积极开发中
+
 ## Getting started
 
 `$ npm install react-native-alibc-sdk --save`
@@ -37,11 +40,24 @@
 
 ## Usage
 
+Demo：https://github.com/zzz945/RNAlibcSdkDemo
+
 ### 环境配置
 
 进入阿里百川开发者控制台 -> 创建应用 -> 在我的产品后台开通百川电商SDK -> 在API申请开通初级电商能力。
 
-#### Android
+#### Ios （参考 http://baichuan.taobao.com/docs/doc.htm?spm=a3c0d.7629140.0.0.VWjqPl&treeId=129&articleId=105648&docType=1 以及Demo工程配置）
+
+1. 配置URL Types为tbopen{AppKey}， 比如tbopen123456。
+2. 在info.plist中,增加LSApplicationQueriesSchemes字段,并添加tbopen,tmall。
+3. 配置ATS, 允许HTTP请求。
+4. 上传BundleID， 获取安全图片放到工程目录底下， 并将安全图片加入工程(Build phases -> 
+Copy Bundle Resources）。
+5. 将node_modules/react-native-alibc-sdk/ios/AlibcTradeSDK/Frameworks和Reaources全部加入工程。参考Demo的工程配置， 添加其它依赖库。
+6. 参考Demo的工程配置， 配置Framework Search Paths和Header Search Paths。
+7. Other Linker flags中添加-lc++和-lstdc++。
+
+#### Android （参考 http://baichuan.taobao.com/docs/doc.htm?spm=a3c0d.7629140.0.0.Qn05oE&treeId=129&articleId=105647&docType=1 以及Demo工程配置）
 1. 上传用于调试的app-debug.apk（发布时再上传签名的apk）， 获取安全图片放在（res/drawable/yw_1222.jpg）。
 2. AndroidManifest.xml:
 	```
@@ -69,9 +85,6 @@
 	}
 	...
 	```
-### 示例代码
-
-Demo：https://github.com/zzz945/RNAlibcSdkDemo
 
 ### 淘宝登录授权
 
@@ -81,23 +94,31 @@ Demo：https://github.com/zzz945/RNAlibcSdkDemo
 	```
 2. 初始化sdk(此方法为异步， 确保回调执行后再进行下一步操作)
 	```
-		AlibcSdk.init(
-			() => console.log("init success"),
-			(code, msg) => console.log(code + ":" + msg)
-    	);
+		AlibcSdk.init((err) => {
+				if (!err)
+					console.log("init success")
+				else
+					console.log(err)
+			}
+		);
 	```
 3. 唤起手淘app进行授权登录， 获取用户个人信息。 
 	```
-		AlibcSdk.login(
-			(userInfo) => console.log(userInfo),
-			(code, msg) => console.log(code + ":" + msg)
+		AlibcSdk.login((err, userInfo) => {
+				if (!err)
+					console.log(userInfo)
+				else
+					console.log(err)
+			}
 		);
 	```
 3. 务必调用logout，否则app处在login状态将不会再次唤起手淘app进行授权登录。
 	```
-		AlibcSdk.logout(
-			() => console.log("logout success"),
-			(code, msg) => console.log(code + ":" + msg)
+		AlibcSdk.logout((err) => {
+			if (!err)
+				console.log("logout success")
+			else
+				console.log(err)
+			}
 		);
 	```
-  

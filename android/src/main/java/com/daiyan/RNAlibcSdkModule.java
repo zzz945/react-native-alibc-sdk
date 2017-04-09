@@ -52,16 +52,19 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   * 初始化
   */
   @ReactMethod
-  public void init(final Callback successCallback, final Callback failCallback) {
+  public void init(final Callback callback) {
       AlibcTradeSDK.asyncInit(reactContext, new AlibcTradeInitCallback() {
         @Override
         public void onSuccess() {
-            successCallback.invoke();
+            callback.invoke(0);
         }
 
         @Override
         public void onFailure(int code, String msg) {
-            failCallback.invoke(code, msg);
+            WritableMap map = Arguments.createMap();
+            map.putInt("code", code);
+            map.putString("msg", msg);
+            callback.invoke(map);
         }
     }); 
   }
@@ -70,25 +73,26 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   * 登录
   */
   @ReactMethod
-  public void login(final Callback successCallback, final Callback failCallback) {
+  public void login(final Callback callback) {
       AlibcLogin alibcLogin = AlibcLogin.getInstance();
 
       alibcLogin.showLogin(getCurrentActivity(), new AlibcLoginCallback() {
           @Override
           public void onSuccess() {
             Session session = AlibcLogin.getInstance().getSession();
-            Log.v(TAG, "获取淘宝用户信息: "+ AlibcLogin.getInstance().getSession());
             WritableMap map = Arguments.createMap();
             map.putString("nick", session.nick);
             map.putString("avatarUrl", session.avatarUrl);
             map.putString("openId", session.openId);
             map.putString("openSid", session.openSid);
-            successCallback.invoke(map);
+            callback.invoke(0, map);
           }
           @Override
           public void onFailure(int code, String msg) {
-            Log.v(TAG, "login fail");
-            failCallback.invoke(code, msg);
+            WritableMap map = Arguments.createMap();
+            map.putInt("code", code);
+            map.putString("msg", msg);
+            callback.invoke(map);
           }
       });
   }
@@ -98,18 +102,21 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   * 退出登录
   */
   @ReactMethod
-  public void logout(final Callback successCallback, final Callback failCallback) {
+  public void logout(final Callback callback) {
       AlibcLogin alibcLogin = AlibcLogin.getInstance();
 
       alibcLogin.logout(getCurrentActivity(), new LogoutCallback() {
           @Override
           public void onSuccess() {
-            successCallback.invoke();
+            callback.invoke(0);
           }
 
           @Override
           public void onFailure(int code, String msg) {
-            failCallback.invoke(msg);
+            WritableMap map = Arguments.createMap();
+            map.putInt("code", code);
+            map.putString("msg", msg);
+            callback.invoke(msg);
           }
       });
   }

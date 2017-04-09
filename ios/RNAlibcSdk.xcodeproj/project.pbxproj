@@ -24,6 +24,25 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNAlibcSdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNAlibcSdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		66E8BD5B1E991BED005B1C15 /* AlibabaAuthSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlibabaAuthSDK.framework; path = AlibcTradeSDK/Frameworks/AlibabaAuthSDK.framework; sourceTree = "<group>"; };
+		66E8BD5D1E991BF8005B1C15 /* AlibcTradeSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlibcTradeSDK.framework; path = AlibcTradeSDK/Frameworks/AlibcTradeSDK.framework; sourceTree = "<group>"; };
+		66E8BD5F1E991C02005B1C15 /* AlibcTradeCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlibcTradeCommon.framework; path = AlibcTradeSDK/Frameworks/AlibcTradeCommon.framework; sourceTree = "<group>"; };
+		66E8BD611E991C05005B1C15 /* AlibabaAuthExt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlibabaAuthExt.framework; path = AlibcTradeSDK/Frameworks/AlibabaAuthExt.framework; sourceTree = "<group>"; };
+		66E8BD671E991C19005B1C15 /* AlibcLinkPartnerSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlibcLinkPartnerSDK.framework; path = AlibcTradeSDK/Frameworks/AlibcLinkPartnerSDK.framework; sourceTree = "<group>"; };
+		66E8BD681E991C19005B1C15 /* AlibcTradeBiz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlibcTradeBiz.framework; path = AlibcTradeSDK/Frameworks/AlibcTradeBiz.framework; sourceTree = "<group>"; };
+		66E8BD691E991C19005B1C15 /* AlipaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlipaySDK.framework; path = AlibcTradeSDK/Frameworks/AlipaySDK.framework; sourceTree = "<group>"; };
+		66E8BD6A1E991C19005B1C15 /* OpenMtopExt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenMtopExt.framework; path = AlibcTradeSDK/Frameworks/OpenMtopExt.framework; sourceTree = "<group>"; };
+		66E8BD6B1E991C19005B1C15 /* OpenMtopSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenMtopSDK.framework; path = AlibcTradeSDK/Frameworks/OpenMtopSDK.framework; sourceTree = "<group>"; };
+		66E8BD6C1E991C19005B1C15 /* SecurityGuardSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityGuardSDK.framework; path = AlibcTradeSDK/Frameworks/SecurityGuardSDK.framework; sourceTree = "<group>"; };
+		66E8BD6D1E991C19005B1C15 /* SGMain.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SGMain.framework; path = AlibcTradeSDK/Frameworks/SGMain.framework; sourceTree = "<group>"; };
+		66E8BD6E1E991C19005B1C15 /* SGNoCaptcha.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SGNoCaptcha.framework; path = AlibcTradeSDK/Frameworks/SGNoCaptcha.framework; sourceTree = "<group>"; };
+		66E8BD6F1E991C19005B1C15 /* SGSecurityBody.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SGSecurityBody.framework; path = AlibcTradeSDK/Frameworks/SGSecurityBody.framework; sourceTree = "<group>"; };
+		66E8BD701E991C19005B1C15 /* UTDID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UTDID.framework; path = AlibcTradeSDK/Frameworks/UTDID.framework; sourceTree = "<group>"; };
+		66E8BD711E991C19005B1C15 /* UTMini.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UTMini.framework; path = AlibcTradeSDK/Frameworks/UTMini.framework; sourceTree = "<group>"; };
+		66E8BD7D1E991C25005B1C15 /* AlibabaAuthSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AlibabaAuthSDK.bundle; path = AlibcTradeSDK/Resources/AlibabaAuthSDK.bundle; sourceTree = "<group>"; };
+		66E8BD7E1E991C25005B1C15 /* AlipaySDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AlipaySDK.bundle; path = AlibcTradeSDK/Resources/AlipaySDK.bundle; sourceTree = "<group>"; };
+		66E8BD7F1E991C25005B1C15 /* ALPLinkPartnerSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ALPLinkPartnerSDK.bundle; path = AlibcTradeSDK/Resources/ALPLinkPartnerSDK.bundle; sourceTree = "<group>"; };
+		66E8BD801E991C25005B1C15 /* NBResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = NBResource.bundle; path = AlibcTradeSDK/Resources/NBResource.bundle; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* RNAlibcSdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNAlibcSdk.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNAlibcSdk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNAlibcSdk.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -50,10 +69,37 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				66E8BD7D1E991C25005B1C15 /* AlibabaAuthSDK.bundle */,
+				66E8BD7E1E991C25005B1C15 /* AlipaySDK.bundle */,
+				66E8BD7F1E991C25005B1C15 /* ALPLinkPartnerSDK.bundle */,
+				66E8BD801E991C25005B1C15 /* NBResource.bundle */,
 				B3E7B5881CC2AC0600A0062D /* RNAlibcSdk.h */,
 				B3E7B5891CC2AC0600A0062D /* RNAlibcSdk.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				66E8BD5A1E991BED005B1C15 /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		66E8BD5A1E991BED005B1C15 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				66E8BD671E991C19005B1C15 /* AlibcLinkPartnerSDK.framework */,
+				66E8BD681E991C19005B1C15 /* AlibcTradeBiz.framework */,
+				66E8BD691E991C19005B1C15 /* AlipaySDK.framework */,
+				66E8BD6A1E991C19005B1C15 /* OpenMtopExt.framework */,
+				66E8BD6B1E991C19005B1C15 /* OpenMtopSDK.framework */,
+				66E8BD6C1E991C19005B1C15 /* SecurityGuardSDK.framework */,
+				66E8BD6D1E991C19005B1C15 /* SGMain.framework */,
+				66E8BD6E1E991C19005B1C15 /* SGNoCaptcha.framework */,
+				66E8BD6F1E991C19005B1C15 /* SGSecurityBody.framework */,
+				66E8BD701E991C19005B1C15 /* UTDID.framework */,
+				66E8BD711E991C19005B1C15 /* UTMini.framework */,
+				66E8BD611E991C05005B1C15 /* AlibabaAuthExt.framework */,
+				66E8BD5F1E991C02005B1C15 /* AlibcTradeCommon.framework */,
+				66E8BD5D1E991BF8005B1C15 /* AlibcTradeSDK.framework */,
+				66E8BD5B1E991BED005B1C15 /* AlibabaAuthSDK.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,8 +242,12 @@
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/AlibcTradeSDK/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
-				"$(inherited)",
+					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
@@ -212,6 +262,10 @@
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/AlibcTradeSDK/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,

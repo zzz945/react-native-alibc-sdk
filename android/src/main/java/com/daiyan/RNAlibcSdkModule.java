@@ -23,12 +23,35 @@ import com.alibaba.baichuan.android.trade.callback.AlibcLoginCallback;
 import com.alibaba.baichuan.android.trade.AlibcTradeSDK;
 import com.alibaba.baichuan.android.trade.callback.AlibcTradeInitCallback;
 
+import com.alibaba.baichuan.android.trade.AlibcTrade;
+import com.alibaba.baichuan.android.trade.AlibcTradeSDK;
+import com.alibaba.baichuan.android.trade.constants.AlibcConstants;
+import com.alibaba.baichuan.android.trade.model.AlibcShowParams;
+import com.alibaba.baichuan.android.trade.model.AlibcTaokeParams;
+import com.alibaba.baichuan.android.trade.model.OpenType;
+import com.alibaba.baichuan.android.trade.page.AlibcAddCartPage;
+import com.alibaba.baichuan.android.trade.page.AlibcBasePage;
+import com.alibaba.baichuan.android.trade.page.AlibcDetailPage;
+import com.alibaba.baichuan.android.trade.page.AlibcPage;
+import com.alibaba.baichuan.android.trade.page.AlibcShopPage;
+import com.alibaba.baichuan.android.trade.callback.AlibcTradeCallback;
+import com.alibaba.baichuan.android.trade.model.ResultType;
+import com.alibaba.baichuan.android.trade.model.TradeResult;
+import com.taobao.applink.util.TBAppLinkUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import android.util.Log;
 
 public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
   private static final String TAG = "RNAlibcSdkModule";
+
+  private Map<String, String> exParams;//yhhpass参数
+  private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
+  private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
 
   private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
     @Override
@@ -41,6 +64,10 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
     super(reactContext);
     this.reactContext = reactContext;
     reactContext.addActivityEventListener(mActivityEventListener);
+
+    alibcShowParams = new AlibcShowParams(OpenType.Auto, false);
+    exParams = new HashMap<>();
+    exParams.put(AlibcConstants.ISV_CODE, "rnappisvcode");
   }
 
   @Override
@@ -52,7 +79,8 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   * 初始化
   */
   @ReactMethod
-  public void init(final Callback callback) {
+  public void init(final String pid, final Callback callback) {
+      this.alibcTaokeParams = new AlibcTaokeParams(pid, "", "");
       AlibcTradeSDK.asyncInit(reactContext, new AlibcTradeInitCallback() {
         @Override
         public void onSuccess() {
@@ -97,6 +125,15 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
       });
   }
 
+  @ReactMethod
+  public void isLogin(final Callback callback) {
+      callback.invoke(AlibcLogin.getInstance().isLogin());
+  }
+
+  @ReactMethod
+  public void getUser(final Callback callback) {
+      // not implement
+  }
 
   /**
   * 退出登录
@@ -111,6 +148,40 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
             callback.invoke(0);
           }
 
+          @Override
+          public void onFailure(int code, String msg) {
+            WritableMap map = Arguments.createMap();
+            map.putInt("code", code);
+            map.putString("msg", msg);
+            callback.invoke(msg);
+          }
+      });
+  }
+
+  @ReactMethod
+  public void show(final String itemId, final Callback callback) {
+      AlibcTrade.show(getCurrentActivity(), 
+                        new AlibcDetailPage(itemId), 
+                        alibcShowParams,
+                        this.alibcTaokeParams, 
+                        exParams,
+                        new AlibcTradeCallback() {
+          @Override
+          public void onTradeSuccess(TradeResult tradeResult) {
+            //打开电商组件，用户操作中成功信息回调。tradeResult：成功信息（结果类型：加购，支付；支付结果）
+            if(tradeResult.resultType.equals(ResultType.TYPECART)){
+              //加购成功
+              WritableMap map = Arguments.createMap();
+              map.putString("type", "card");
+              callback.invoke(0, map);
+            }else if (tradeResult.resultType.equals(ResultType.TYPEPAY)){
+              //支付成功
+              WritableMap map = Arguments.createMap();
+              map.putString("type", "pay");
+              map.putArray("orders", Arguments.fromArray(tradeResult.payResult.paySuccessOrders));
+              callback.invoke(0, map);
+            }
+          }
           @Override
           public void onFailure(int code, String msg) {
             WritableMap map = Arguments.createMap();

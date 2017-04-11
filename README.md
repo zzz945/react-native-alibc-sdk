@@ -1,8 +1,7 @@
 
 # react-native-alibc-sdk
 
-目前项目已经实现的功能有：淘宝登录授权
-其它功能正在积极开发中
+目前项目已经实现的功能有：淘宝登录授权、设置淘客参数、打开宝贝详情页， 其它功能正在积极开发中。
 
 ## Getting started
 
@@ -44,7 +43,7 @@ Demo：https://github.com/zzz945/RNAlibcSdkDemo
 
 ### 环境配置
 
-进入阿里百川开发者控制台 -> 创建应用 -> 在我的产品后台开通百川电商SDK -> 在API申请开通初级电商能力。
+进入阿里百川开发者控制台 -> 创建应用 -> 在我的产品后台开通百川电商SDK -> 在API申请开通初级电商能力和无线开放百川淘宝客。
 
 #### Ios （参考 http://baichuan.taobao.com/docs/doc.htm?spm=a3c0d.7629140.0.0.VWjqPl&treeId=129&articleId=105648&docType=1 以及Demo工程配置）
 
@@ -85,40 +84,6 @@ Copy Bundle Resources）。
 	}
 	...
 	```
+### API文档（TODO）
 
-### 淘宝登录授权
-
-1. 引入sdk
-	```
-		import RNAlibcSdk from 'react-native-alibc-sdk';
-	```
-2. 初始化sdk(此方法为异步， 确保回调执行后再进行下一步操作)
-	```
-		AlibcSdk.init((err) => {
-				if (!err)
-					console.log("init success")
-				else
-					console.log(err)
-			}
-		);
-	```
-3. 唤起手淘app进行授权登录， 获取用户个人信息。 
-	```
-		AlibcSdk.login((err, userInfo) => {
-				if (!err)
-					console.log(userInfo)
-				else
-					console.log(err)
-			}
-		);
-	```
-3. 务必调用logout，否则app处在login状态将不会再次唤起手淘app进行授权登录。
-	```
-		AlibcSdk.logout((err) => {
-			if (!err)
-				console.log("logout success")
-			else
-				console.log(err)
-			}
-		);
-	```
+	参考Demo。

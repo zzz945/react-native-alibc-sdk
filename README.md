@@ -40,6 +40,10 @@
 ## Usage
 
 Demo：https://github.com/zzz945/RNAlibcSdkDemo
+<br>
+如果已安装和登录手淘app， 会唤起app授权，无需输入用户名密码。
+
+![demo_login](https://cloud.githubusercontent.com/assets/21496977/24909124/33949adc-1ef5-11e7-9a2f-a467a4d920d4.gif)
 
 ### 环境配置
 

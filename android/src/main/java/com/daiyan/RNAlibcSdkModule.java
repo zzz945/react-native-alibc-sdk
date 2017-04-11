@@ -49,6 +49,8 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
   private static final String TAG = "RNAlibcSdkModule";
 
+  private final static String NOT_LOGIN = "not login";
+
   private Map<String, String> exParams;//yhhpass参数
   private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
   private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
@@ -84,7 +86,7 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
       AlibcTradeSDK.asyncInit(reactContext, new AlibcTradeInitCallback() {
         @Override
         public void onSuccess() {
-            callback.invoke(0);
+            callback.invoke(null, "init success");
         }
 
         @Override
@@ -113,7 +115,7 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
             map.putString("avatarUrl", session.avatarUrl);
             map.putString("openId", session.openId);
             map.putString("openSid", session.openSid);
-            callback.invoke(0, map);
+            callback.invoke(null, map);
           }
           @Override
           public void onFailure(int code, String msg) {
@@ -127,12 +129,23 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void isLogin(final Callback callback) {
-      callback.invoke(AlibcLogin.getInstance().isLogin());
+      callback.invoke(null, AlibcLogin.getInstance().isLogin());
   }
 
   @ReactMethod
   public void getUser(final Callback callback) {
-      // not implement
+      if (AlibcLogin.getInstance().isLogin()) {
+        Session session = AlibcLogin.getInstance().getSession();
+        WritableMap map = Arguments.createMap();
+        map.putString("nick", session.nick);
+        map.putString("avatarUrl", session.avatarUrl);
+        map.putString("openId", session.openId);
+        map.putString("openSid", session.openSid);
+        callback.invoke(null, map);
+      } else {
+        callback.invoke(NOT_LOGIN);
+      }
+        
   }
 
   /**
@@ -145,7 +158,7 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
       alibcLogin.logout(getCurrentActivity(), new LogoutCallback() {
           @Override
           public void onSuccess() {
-            callback.invoke(0);
+            callback.invoke(null, "logout success");
           }
 
           @Override
@@ -173,13 +186,13 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
               //加购成功
               WritableMap map = Arguments.createMap();
               map.putString("type", "card");
-              callback.invoke(0, map);
+              callback.invoke(null, map);
             }else if (tradeResult.resultType.equals(ResultType.TYPEPAY)){
               //支付成功
               WritableMap map = Arguments.createMap();
               map.putString("type", "pay");
               map.putArray("orders", Arguments.fromArray(tradeResult.payResult.paySuccessOrders));
-              callback.invoke(0, map);
+              callback.invoke(null, map);
             }
           }
           @Override

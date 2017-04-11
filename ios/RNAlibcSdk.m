@@ -5,6 +5,7 @@
 #import <AlibabaAuthSDK/ALBBSDK.h>
 #import <React/RCTLog.h>
 
+#define NOT_LOGIN (@"not login")
 
 @implementation RNAlibcSdk
 {
@@ -70,21 +71,18 @@ RCT_EXPORT_METHOD(login: (RCTResponseSenderBlock)callback)
 RCT_EXPORT_METHOD(isLogin: (RCTResponseSenderBlock)callback)
 {
     bool isLogin = [[ALBBSession sharedInstance] isLogin];
-    callback(@[[NSNumber numberWithBool: isLogin]]);
+    callback(@[[NSNull null], [NSNumber numberWithBool: isLogin]]);
 }
 
 RCT_EXPORT_METHOD(getUser: (RCTResponseSenderBlock)callback)
 {
-    NSDictionary *ret = nil;
     if([[ALBBSession sharedInstance] isLogin]){
         ALBBUser *s = [[ALBBSession sharedInstance] getUser];
-        ret = @{@"nick": s.nick, @"avatarUrl":s.avatarUrl, @"openId":s.openId, @"openSid":s.openSid};
+        NSDictionary *ret = @{@"nick": s.nick, @"avatarUrl":s.avatarUrl, @"openId":s.openId, @"openSid":s.openSid};
+        callback(@[[NSNull null], ret]);
+    } else {
+        callback(@[NOT_LOGIN]);
     }
-
-    if (ret)
-        callback(@[ret]);
-    else
-        callback(@[[NSNull null]]);
 }
 
 RCT_EXPORT_METHOD(logout: (RCTResponseSenderBlock)callback)

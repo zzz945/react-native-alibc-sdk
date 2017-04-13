@@ -59,6 +59,7 @@ Copy Bundle Resources）。
 5. 将node_modules/react-native-alibc-sdk/ios/AlibcTradeSDK/Frameworks和Reaources全部加入工程。参考Demo的工程配置， 添加其它依赖库。
 6. 参考Demo的工程配置， 配置Framework Search Paths和Header Search Paths。
 7. Other Linker flags中添加-lc++和-lstdc++。
+8. 关闭bitcode（build settings -> build options）
 
 #### Android （参考 http://baichuan.taobao.com/docs/doc.htm?spm=a3c0d.7629140.0.0.Qn05oE&treeId=129&articleId=105647&docType=1 以及Demo工程配置）
 1. 上传用于调试的app-debug.apk（发布时再上传签名的apk）， 获取安全图片放在（res/drawable/yw_1222.jpg）。

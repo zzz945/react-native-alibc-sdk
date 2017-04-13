@@ -60,6 +60,36 @@ Copy Bundle Resources）。
 6. 参考Demo的工程配置， 配置Framework Search Paths和Header Search Paths。
 7. Other Linker flags中添加-lc++和-lstdc++。
 8. 关闭bitcode（build settings -> build options）
+9. 参考DEMO添加下面代码到AppDelegate.m, 让sdk处理应用跳转结果。
+	```
+	#import <AlibcTradeSDK/AlibcTradeSDK.h>
+	...
+	- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
+		// 如果百川处理过会返回YES
+		if ([[AlibcTradeSDK sharedInstance] application:application
+								openURL: url
+								sourceApplication: sourceApplication
+								annotation: annotation]) {
+			// 处理其他app跳转到自己的app
+			return YES;
+		}
+		return NO;
+	}
+
+
+	//IOS9.0 系统新的处理openURL 的API
+	- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {
+		//处理其他app跳转到自己的app，如果百川处理过会返回YES
+	if ([[AlibcTradeSDK sharedInstance] application:application
+											openURL: url
+											options: options]) {
+			return YES;
+		}
+		
+		return NO;
+	}
+	...
+	```
 
 #### Android （参考 http://baichuan.taobao.com/docs/doc.htm?spm=a3c0d.7629140.0.0.Qn05oE&treeId=129&articleId=105647&docType=1 以及Demo工程配置）
 1. 上传用于调试的app-debug.apk（发布时再上传签名的apk）， 获取安全图片放在（res/drawable/yw_1222.jpg）。

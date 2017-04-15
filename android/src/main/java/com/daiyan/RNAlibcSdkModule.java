@@ -32,6 +32,7 @@ import com.alibaba.baichuan.android.trade.model.OpenType;
 import com.alibaba.baichuan.android.trade.page.AlibcAddCartPage;
 import com.alibaba.baichuan.android.trade.page.AlibcBasePage;
 import com.alibaba.baichuan.android.trade.page.AlibcDetailPage;
+import com.alibaba.baichuan.android.trade.page.AlibcMiniDetailPage;
 import com.alibaba.baichuan.android.trade.page.AlibcPage;
 import com.alibaba.baichuan.android.trade.page.AlibcShopPage;
 import com.alibaba.baichuan.android.trade.callback.AlibcTradeCallback;
@@ -50,6 +51,7 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   private static final String TAG = "RNAlibcSdkModule";
 
   private final static String NOT_LOGIN = "not login";
+  private final static String INVALID_TRADE_RESULT = "invalid trade result";
 
   private Map<String, String> exParams;//yhhpass参数
   private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
@@ -62,6 +64,14 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
     }
   };
 
+  static private RNAlibcSdkModule mRNAlibcSdkModule = null;
+  static public RNAlibcSdkModule sharedInstance(ReactApplicationContext context) {
+    if (mRNAlibcSdkModule == null)
+      return new RNAlibcSdkModule(context);
+    else
+      return mRNAlibcSdkModule;
+  }
+
   public RNAlibcSdkModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
@@ -70,6 +80,18 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
     alibcShowParams = new AlibcShowParams(OpenType.Auto, false);
     exParams = new HashMap<>();
     exParams.put(AlibcConstants.ISV_CODE, "rnappisvcode");
+  }
+
+  public AlibcShowParams getShowParams() {
+    return this.alibcShowParams;
+  }
+
+  public AlibcTaokeParams getTaokeParams() {
+    return this.alibcTaokeParams;
+  }
+
+  public Map<String, String> getExParams() {
+    return this.exParams;
   }
 
   @Override
@@ -81,11 +103,12 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   * 初始化
   */
   @ReactMethod
-  public void init(final String pid, final Callback callback) {
+  public void init(final String pid, final Boolean forceH5, final Callback callback) {
       this.alibcTaokeParams = new AlibcTaokeParams(pid, "", "");
       AlibcTradeSDK.asyncInit(reactContext, new AlibcTradeInitCallback() {
         @Override
         public void onSuccess() {
+            AlibcTradeSDK.setForceH5(forceH5);
             callback.invoke(null, "init success");
         }
 
@@ -175,12 +198,13 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   public void show(final String itemId, final Callback callback) {
       AlibcTrade.show(getCurrentActivity(), 
                         new AlibcDetailPage(itemId), 
-                        alibcShowParams,
+                        this.alibcShowParams,
                         this.alibcTaokeParams, 
-                        exParams,
+                        this.exParams,
                         new AlibcTradeCallback() {
           @Override
           public void onTradeSuccess(TradeResult tradeResult) {
+            Log.v("ReactNative", TAG + ":onTradeSuccess");
             //打开电商组件，用户操作中成功信息回调。tradeResult：成功信息（结果类型：加购，支付；支付结果）
             if(tradeResult.resultType.equals(ResultType.TYPECART)){
               //加购成功
@@ -193,6 +217,9 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
               map.putString("type", "pay");
               map.putArray("orders", Arguments.fromArray(tradeResult.payResult.paySuccessOrders));
               callback.invoke(null, map);
+            }else {
+              WritableMap map = Arguments.createMap();
+              callback.invoke(INVALID_TRADE_RESULT);
             }
           }
           @Override

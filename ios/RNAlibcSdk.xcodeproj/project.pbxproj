@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		663CB5331EA39D11004397A2 /* AlibcTradeWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 663CB5321EA39D11004397A2 /* AlibcTradeWebViewManager.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RNAlibcSdk.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNAlibcSdk.m */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNAlibcSdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNAlibcSdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		663CB5321EA39D11004397A2 /* AlibcTradeWebViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlibcTradeWebViewManager.m; sourceTree = "<group>"; };
 		66E8BD5B1E991BED005B1C15 /* AlibabaAuthSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlibabaAuthSDK.framework; path = AlibcTradeSDK/Frameworks/AlibabaAuthSDK.framework; sourceTree = "<group>"; };
 		66E8BD5D1E991BF8005B1C15 /* AlibcTradeSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlibcTradeSDK.framework; path = AlibcTradeSDK/Frameworks/AlibcTradeSDK.framework; sourceTree = "<group>"; };
 		66E8BD5F1E991C02005B1C15 /* AlibcTradeCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlibcTradeCommon.framework; path = AlibcTradeSDK/Frameworks/AlibcTradeCommon.framework; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				663CB5321EA39D11004397A2 /* AlibcTradeWebViewManager.m */,
 				66E8BD7D1E991C25005B1C15 /* AlibabaAuthSDK.bundle */,
 				66E8BD7E1E991C25005B1C15 /* AlipaySDK.bundle */,
 				66E8BD7F1E991C25005B1C15 /* ALPLinkPartnerSDK.bundle */,
@@ -158,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				663CB5331EA39D11004397A2 /* AlibcTradeWebViewManager.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RNAlibcSdk.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -24,7 +24,7 @@ export class AlibcTradeWebView extends React.Component {
 }
 
 AlibcTradeWebView.propTypes = {
-  itemId: PropTypes.string,
+  param: PropTypes.object,
   onChange: React.PropTypes.func,
   ...View.propTypes,
 };

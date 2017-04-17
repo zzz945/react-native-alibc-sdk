@@ -19,7 +19,7 @@
 }
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(init: (NSString *)pid callback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(init: (NSString *)pid forceH5:(BOOL)forceH5 callback:(RCTResponseSenderBlock)callback)
 {
     // 百川平台基础SDK初始化，加载并初始化各个业务能力插件
     [[AlibcTradeSDK sharedInstance] asyncInitWithSuccess:^{
@@ -50,7 +50,7 @@ RCT_EXPORT_METHOD(init: (NSString *)pid callback:(RCTResponseSenderBlock)callbac
     //[[AlibcTradeSDK sharedInstance] setISVCode:@"your_isv_code"];
      
     // 设置全局配置，是否强制使用h5
-    [[AlibcTradeSDK sharedInstance] setIsForceH5:NO];
+    [[AlibcTradeSDK sharedInstance] setIsForceH5:forceH5];
 }
 
 RCT_EXPORT_METHOD(login: (RCTResponseSenderBlock)callback)
@@ -91,29 +91,43 @@ RCT_EXPORT_METHOD(logout: (RCTResponseSenderBlock)callback)
     callback(@[[NSNull null]]);
 }
 
-RCT_EXPORT_METHOD(show: (NSString *)itemid callback: (RCTResponseSenderBlock)callback){
-
-    id<AlibcTradePage> page = [AlibcTradePageFactory itemDetailPage:itemid];
+RCT_EXPORT_METHOD(show: (NSDictionary *)param callback: (RCTResponseSenderBlock)callback){
     id<AlibcTradeService> service = [AlibcTradeSDK sharedInstance].tradeService;
-    
-    [service
-     show:[UIApplication sharedApplication].delegate.window.rootViewController
-     page:page
-     showParams:showParams
-     taoKeParams:taokeParams
-     trackParam:nil
-     tradeProcessSuccessCallback:^(AlibcTradeResult * _Nullable result) {
-        if (result.result == AlibcTradeResultTypeAddCard) {
-            NSDictionary *ret = @{@"type": @"card"};
-            callback(@[[NSNull null], ret]);
-        } else if (result.result == AlibcTradeResultTypePaySuccess) {
-            NSDictionary *ret = @{@"type": @"pay", @"orders": result.payResult.paySuccessOrders};
-            callback(@[[NSNull null], ret]);
-        }
-     } tradeProcessFailedCallback:^(NSError * _Nullable error) {
-        NSDictionary *ret = @{@"code": @(error.code), @"msg":error.description};
-        callback(@[ret]);
-     }];
+    NSString *type = param[@"type"];
+    if ([type isEqualToString:@"detail"]) {
+        id<AlibcTradePage> page = [AlibcTradePageFactory itemDetailPage:(NSString *)param[@"payload"]];
+
+        [service
+        show:[UIApplication sharedApplication].delegate.window.rootViewController
+        page:page
+        showParams:showParams
+        taoKeParams:taokeParams
+        trackParam:nil
+        tradeProcessSuccessCallback:^(AlibcTradeResult * _Nullable result) {
+            if (result.result == AlibcTradeResultTypeAddCard) {
+                NSDictionary *ret = @{@"type": @"card"};
+                callback(@[[NSNull null], ret]);
+            } else if (result.result == AlibcTradeResultTypePaySuccess) {
+                NSDictionary *ret = @{@"type": @"pay", @"orders": result.payResult.paySuccessOrders};
+                callback(@[[NSNull null], ret]);
+            }
+        } tradeProcessFailedCallback:^(NSError * _Nullable error) {
+            NSDictionary *ret = @{@"code": @(error.code), @"msg":error.description};
+            callback(@[ret]);
+        }];
+    } else if ([type isEqualToString:@"url"]) {
+        RCTLog(@"not implement");
+    } else if ([type isEqualToString:@"shop"]) {
+        RCTLog(@"not implement");
+    } else if ([type isEqualToString:@"orders"]) {
+        RCTLog(@"not implement");
+    } else if ([type isEqualToString:@"addCard"]) {
+        RCTLog(@"not implement");
+    } else if ([type isEqualToString:@"mycard"]) {
+        RCTLog(@"not implement");
+    } else {
+        RCTLog(@"not implement");
+    }
 }
 
 @end

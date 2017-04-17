@@ -10,7 +10,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableMap;
 
 import android.util.Log;
-public class AlibcTradeWebViewManager extends SimpleViewManager<AlibcTradeWebView> {
+public class AlibcTradeWebViewManager extends SimpleViewManager<WebView> {
 	private final static String REACT_CLASS = "AlibcTradeWebView";
 	private RNAlibcSdkModule mModule;
 
@@ -24,15 +24,14 @@ public class AlibcTradeWebViewManager extends SimpleViewManager<AlibcTradeWebVie
 	}
 
 	@Override
-	protected AlibcTradeWebView createViewInstance(ThemedReactContext themedReactContext) {
-		return new AlibcTradeWebView(themedReactContext);
+	protected WebView createViewInstance(ThemedReactContext themedReactContext) {
+		WebView view = new WebView(themedReactContext.getCurrentActivity());
+		view.getSettings().setJavaScriptEnabled(true); 
+		return view;
 	}
 
-	@ReactProp(name = "itemId")
-	public void propSetItemId(AlibcTradeWebView view, String itemId) {
-		view.show(itemId,
-					mModule.getShowParams(),
-					mModule.getTaokeParams(),
-					mModule.getExParams());
+	@ReactProp(name = "param")
+	public void propSetParam(WebView view, ReadableMap param) {
+		mModule.showInWebView(view, param);
 	}
 }

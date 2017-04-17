@@ -8,6 +8,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.BaseActivityEventListener;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Arguments;
 
 import android.app.Activity;
@@ -35,6 +36,8 @@ import com.alibaba.baichuan.android.trade.page.AlibcDetailPage;
 import com.alibaba.baichuan.android.trade.page.AlibcMiniDetailPage;
 import com.alibaba.baichuan.android.trade.page.AlibcPage;
 import com.alibaba.baichuan.android.trade.page.AlibcShopPage;
+import com.alibaba.baichuan.android.trade.page.AlibcMyOrdersPage;
+import com.alibaba.baichuan.android.trade.page.AlibcMyCartsPage;
 import com.alibaba.baichuan.android.trade.callback.AlibcTradeCallback;
 import com.alibaba.baichuan.android.trade.model.ResultType;
 import com.alibaba.baichuan.android.trade.model.TradeResult;
@@ -42,6 +45,11 @@ import com.taobao.applink.util.TBAppLinkUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import android.webkit.WebView; 
+import android.webkit.WebViewClient;
+import android.webkit.WebChromeClient;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 import android.util.Log;
 
@@ -52,6 +60,7 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
 
   private final static String NOT_LOGIN = "not login";
   private final static String INVALID_TRADE_RESULT = "invalid trade result";
+  private final static String INVALID_PARAM = "invalid param";
 
   private Map<String, String> exParams;//yhhpass参数
   private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
@@ -80,18 +89,6 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
     alibcShowParams = new AlibcShowParams(OpenType.Auto, false);
     exParams = new HashMap<>();
     exParams.put(AlibcConstants.ISV_CODE, "rnappisvcode");
-  }
-
-  public AlibcShowParams getShowParams() {
-    return this.alibcShowParams;
-  }
-
-  public AlibcTaokeParams getTaokeParams() {
-    return this.alibcTaokeParams;
-  }
-
-  public Map<String, String> getExParams() {
-    return this.exParams;
   }
 
   @Override
@@ -195,9 +192,111 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void show(final String itemId, final Callback callback) {
-      AlibcTrade.show(getCurrentActivity(), 
-                        new AlibcDetailPage(itemId), 
+  public void show(final ReadableMap param, final Callback callback) {
+    String type = param.getString("type");
+    switch(type){
+      case "detail":
+        this._show(new AlibcDetailPage(param.getString("payload")), callback);
+        break;
+      case "url":
+        this._show(new AlibcPage(param.getString("payload")), callback);
+        break;
+      case "shop":
+        this._show(new AlibcShopPage(param.getString("payload")), callback);
+        break;
+      case "orders":
+        ReadableMap payload = param.getMap("payload");
+        this._show(new AlibcMyOrdersPage(payload.getInt("orderType"), payload.getBoolean("isAllOrder")), callback);
+        break;
+      case "addCard":
+        this._show(new AlibcAddCartPage(param.getString("payload")), callback);
+        break;
+      case "mycard":
+        this._show(new AlibcMyCartsPage(), callback);
+        break;
+      default: 
+        callback.invoke(INVALID_PARAM);
+        break;
+    }
+  }
+
+  public void showInWebView(final WebView webview, final ReadableMap param) {
+    String type = param.getString("type");
+    switch(type){
+      case "detail":
+        this._showInWebView(webview, new AlibcDetailPage(param.getString("payload")));
+        break;
+      case "url":
+        this._showInWebView(webview, new AlibcPage(param.getString("payload")));
+        break;
+      case "shop":
+        this._showInWebView(webview, new AlibcShopPage(param.getString("payload")));
+        break;
+      case "orders":
+        ReadableMap payload = param.getMap("payload");
+        this._showInWebView(webview, new AlibcMyOrdersPage(payload.getInt("orderType"), payload.getBoolean("isAllOrder")));
+        break;
+      case "addCard":
+        this._showInWebView(webview, new AlibcAddCartPage(param.getString("payload")));
+        break;
+      case "mycard":
+        this._showInWebView(webview, new AlibcMyCartsPage());
+        break;
+      default: 
+        WritableMap event = Arguments.createMap();
+        event.putString("type", INVALID_PARAM);
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                webview.getId(),
+                "topChange",
+                event);
+        break;
+    }
+  }
+
+  private void _showInWebView(final WebView webview, final AlibcBasePage page) {
+    AlibcTrade.show(getCurrentActivity(), 
+                        webview,
+                        null,
+                        null,
+                        page,
+                        this.alibcShowParams,
+                        this.alibcTaokeParams, 
+                        this.exParams,
+                        new AlibcTradeCallback() {
+          @Override
+          public void onTradeSuccess(TradeResult tradeResult) {
+            Log.v("ReactNative", TAG + ":onTradeSuccess");
+            WritableMap event = Arguments.createMap();
+            //打开电商组件，用户操作中成功信息回调。tradeResult：成功信息（结果类型：加购，支付；支付结果）
+            if(tradeResult.resultType.equals(ResultType.TYPECART)){
+                event.putString("type", "card");
+            }else if (tradeResult.resultType.equals(ResultType.TYPEPAY)){
+                event.putString("type", "pay");
+                event.putArray("orders", Arguments.fromArray(tradeResult.payResult.paySuccessOrders));
+            }else { 
+                event.putString("type", "no type");
+            }
+            reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                    webview.getId(),
+                    "topChange",
+                    event);
+            }
+          @Override
+          public void onFailure(int code, String msg) {
+            WritableMap event = Arguments.createMap();
+            event.putInt("code", code);
+            event.putString("msg", msg);
+            reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                    webview.getId(),
+                    "topChange",
+                    event);
+          }
+      });
+  }
+
+  private void _show(AlibcBasePage page, final Callback callback) {
+    AlibcTrade.show(getCurrentActivity(), 
+                        page, 
                         this.alibcShowParams,
                         this.alibcTaokeParams, 
                         this.exParams,
@@ -218,7 +317,6 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
               map.putArray("orders", Arguments.fromArray(tradeResult.payResult.paySuccessOrders));
               callback.invoke(null, map);
             }else {
-              WritableMap map = Arguments.createMap();
               callback.invoke(INVALID_TRADE_RESULT);
             }
           }

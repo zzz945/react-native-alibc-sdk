@@ -1,8 +1,9 @@
 
 #import <React/RCTViewManager.h>
-#import <WebKit/WebKit.h>
+#import "AlibcWebView.h"
 
 @interface AlibcTradeWebViewManager : RCTViewManager
+
 @end
 
 @implementation AlibcTradeWebViewManager
@@ -11,11 +12,10 @@ RCT_EXPORT_MODULE()
 
 - (UIView *)view
 {
-    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero];
-    NSURL *url = [NSURL URLWithString:@"http://www.baidu.com"];
-    NSURLRequest *request =[NSURLRequest requestWithURL:url];
-    [webView loadRequest:request];
+    AlibcWebView *webView = [[AlibcWebView alloc] initWithFrame:CGRectZero];
     return webView;
 }
+
+RCT_EXPORT_VIEW_PROPERTY(param, NSDictionary)
 
 @end

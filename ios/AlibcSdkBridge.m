@@ -146,5 +146,52 @@
      }];
 }
 
+- (void)showInWebView: (WKWebView*)webView param:(NSDictionary *)param
+{
+    NSString *type = param[@"type"];
+    id<AlibcTradePage> page;
+    if ([type isEqualToString:@"detail"]) {
+        page = [AlibcTradePageFactory itemDetailPage:(NSString *)param[@"payload"]];
+    } else if ([type isEqualToString:@"url"]) {
+        page = [AlibcTradePageFactory page:(NSString *)param[@"payload"]];
+    } else if ([type isEqualToString:@"shop"]) {
+        page = [AlibcTradePageFactory shopPage:(NSString *)param[@"payload"]];
+    } else if ([type isEqualToString:@"orders"]) {
+        NSDictionary *payload = (NSDictionary *)param[@"payload"];
+        page = [AlibcTradePageFactory myOrdersPage:[payload[@"orderType"] integerValue] isAllOrder:[payload[@"isAllOrder"] boolValue]];
+    } else if ([type isEqualToString:@"addCard"]) {
+        page = [AlibcTradePageFactory addCartPage:(NSString *)param[@"payload"]];
+    } else if ([type isEqualToString:@"mycard"]) {
+        page = [AlibcTradePageFactory myCartsPage];
+    } else {
+        RCTLog(@"not implement");
+        return;
+    }
+    
+    [self _showInWebView:webView page:page];
+}
+
+- (void)_showInWebView: (WKWebView*)webView page:(id<AlibcTradePage>)page
+{
+    id<AlibcTradeService> service = [AlibcTradeSDK sharedInstance].tradeService;
+    
+    [service
+     show:[UIApplication sharedApplication].delegate.window.rootViewController
+     webView:webView
+     page:page
+     showParams:showParams
+     taoKeParams:taokeParams
+     trackParam:nil
+     tradeProcessSuccessCallback:^(AlibcTradeResult * _Nullable result) {
+         if (result.result == AlibcTradeResultTypeAddCard) {
+             NSDictionary *ret = @{@"type": @"card"};
+         } else if (result.result == AlibcTradeResultTypePaySuccess) {
+             NSDictionary *ret = @{@"type": @"pay", @"orders": result.payResult.paySuccessOrders};
+         }
+     } tradeProcessFailedCallback:^(NSError * _Nullable error) {
+         NSDictionary *ret = @{@"code": @(error.code), @"msg":error.description};
+     }];
+}
+
 
 @end

@@ -15,6 +15,7 @@
 #import <Foundation/Foundation.h>
 #import <AlibabaAuthSDK/ALBBSDK.h>
 #import <AlibcTradeSDK/AlibcTradeSDK.h>
+#import <WebKit/WebKit.h>
 
 @interface AlibcSdkBridge : NSObject
 + (instancetype)sharedInstance;
@@ -24,5 +25,5 @@
 - (void)getUser: (RCTResponseSenderBlock)callback;
 - (void)logout: (RCTResponseSenderBlock)callback;
 - (void)show: (NSDictionary *)param callback: (RCTResponseSenderBlock)callback;
-- (void)_show: (id<AlibcTradePage>)page callback: (RCTResponseSenderBlock)callback;
+- (void)showInWebView: (WKWebView*)webView param:(NSDictionary *)param;
 @end

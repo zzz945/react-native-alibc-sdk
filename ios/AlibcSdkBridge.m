@@ -146,7 +146,7 @@
      }];
 }
 
-- (void)showInWebView: (WKWebView*)webView param:(NSDictionary *)param
+- (void)showInWebView: (UIWebView *)webView param:(NSDictionary *)param
 {
     NSString *type = param[@"type"];
     id<AlibcTradePage> page;
@@ -171,7 +171,7 @@
     [self _showInWebView:webView page:page];
 }
 
-- (void)_showInWebView: (WKWebView*)webView page:(id<AlibcTradePage>)page
+- (void)_showInWebView: (UIWebView *)webView page:(id<AlibcTradePage>)page
 {
     id<AlibcTradeService> service = [AlibcTradeSDK sharedInstance].tradeService;
     

@@ -62,7 +62,7 @@ RCT_EXPORT_METHOD(reload:(nonnull NSNumber *)reactTag)
 }
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    RCTLog(@"Loading URL :%@",request.URL.absoluteString);
+    //RCTLog(@"Loading URL :%@",request.URL.absoluteString);
     NSString* url = request.URL.absoluteString;
     if ([url hasPrefix:@"http://login.m.taobao.com/"] ||
             [url hasPrefix:@"http://"]  ||

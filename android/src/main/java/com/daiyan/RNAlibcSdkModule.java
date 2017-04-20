@@ -220,27 +220,27 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
     }
   }
 
-  public void showInWebView(final WebView webview, final ReadableMap param) {
+  public void showInWebView(final WebView webview, WebViewClient webViewClient, final ReadableMap param) {
     String type = param.getString("type");
     switch(type){
       case "detail":
-        this._showInWebView(webview, new AlibcDetailPage(param.getString("payload")));
+        this._showInWebView(webview, webViewClient, new AlibcDetailPage(param.getString("payload")));
         break;
       case "url":
-        this._showInWebView(webview, new AlibcPage(param.getString("payload")));
+        this._showInWebView(webview, webViewClient, new AlibcPage(param.getString("payload")));
         break;
       case "shop":
-        this._showInWebView(webview, new AlibcShopPage(param.getString("payload")));
+        this._showInWebView(webview, webViewClient, new AlibcShopPage(param.getString("payload")));
         break;
       case "orders":
         ReadableMap payload = param.getMap("payload");
-        this._showInWebView(webview, new AlibcMyOrdersPage(payload.getInt("orderType"), payload.getBoolean("isAllOrder")));
+        this._showInWebView(webview, webViewClient, new AlibcMyOrdersPage(payload.getInt("orderType"), payload.getBoolean("isAllOrder")));
         break;
       case "addCard":
-        this._showInWebView(webview, new AlibcAddCartPage(param.getString("payload")));
+        this._showInWebView(webview, webViewClient, new AlibcAddCartPage(param.getString("payload")));
         break;
       case "mycard":
-        this._showInWebView(webview, new AlibcMyCartsPage());
+        this._showInWebView(webview, webViewClient, new AlibcMyCartsPage());
         break;
       default: 
         WritableMap event = Arguments.createMap();
@@ -253,10 +253,10 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
     }
   }
 
-  private void _showInWebView(final WebView webview, final AlibcBasePage page) {
+  private void _showInWebView(final WebView webview, WebViewClient webViewClient, final AlibcBasePage page) {
     AlibcTrade.show(getCurrentActivity(), 
                         webview,
-                        null,
+                        webViewClient,
                         null,
                         page,
                         this.alibcShowParams,

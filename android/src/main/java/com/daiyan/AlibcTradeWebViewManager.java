@@ -2,7 +2,6 @@ package com.daiyan;
 
 import android.webkit.WebView;  
 import android.webkit.WebViewClient; 
-import android.webkit.WebResourceRequest;
 
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -23,6 +22,7 @@ import android.content.Intent;
 import android.content.ActivityNotFoundException;
 import android.net.Uri;
 import javax.annotation.Nullable;
+import android.view.ViewGroup.LayoutParams;
 import android.util.Log;
 
 public class AlibcTradeWebViewManager extends SimpleViewManager<WebView> {
@@ -53,8 +53,8 @@ public class AlibcTradeWebViewManager extends SimpleViewManager<WebView> {
 			super.onPageFinished(webView, url);
 			WritableMap event = Arguments.createMap();
 			event.putBoolean("loading", false);
-			event.putBoolean("error", false);
 			event.putBoolean("canGoBack", webView.canGoBack());
+			event.putString("title", webView.getTitle());
 			ReactContext reactContext = ((AlibcWebView)webView).getReactContext();
 			reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(webView.getId(), "onStateChange", event);
 		}
@@ -64,7 +64,6 @@ public class AlibcTradeWebViewManager extends SimpleViewManager<WebView> {
 			super.onPageStarted(webView, url, favicon);
 			WritableMap event = Arguments.createMap();
 			event.putBoolean("loading", true);
-			event.putBoolean("error", false);
 			event.putBoolean("canGoBack", webView.canGoBack());
 			ReactContext reactContext = ((AlibcWebView)webView).getReactContext();
 			reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(webView.getId(), "onStateChange", event);
@@ -72,19 +71,13 @@ public class AlibcTradeWebViewManager extends SimpleViewManager<WebView> {
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			if (url.startsWith("http://login.m.taobao.com/") || url.startsWith("http://") || url.startsWith("https://") ||
+			Log.v(ReactConstants.TAG, REACT_CLASS + " shouldOverrideUrlLoading:" + url);
+			if (url.startsWith("http://") || url.startsWith("https://") ||
 				url.startsWith("file://")) {
 				return false;
 			} else {
 				return true;
 			}
-		}
-
-		@Override
-		public void onReceivedError(WebView webView, int errorCode, String description, String failingUrl) {
-			Log.v("ReactNative", REACT_CLASS + " onReceivedError");
-			super.onReceivedError(webView, errorCode, description, failingUrl);
-			// do nothing
 		}
 	}
 
@@ -99,15 +92,26 @@ public class AlibcTradeWebViewManager extends SimpleViewManager<WebView> {
 
 	@Override
 	protected WebView createViewInstance(ThemedReactContext themedReactContext) {
-		WebView view = new AlibcWebView(themedReactContext);
-		view.getSettings().setJavaScriptEnabled(true); 
-		return view;
+		WebView webView = new AlibcWebView(themedReactContext);
+		webView.getSettings().setJavaScriptEnabled(true);
+
+		/*webView.getSettings().setBuiltInZoomControls(true);
+		webView.getSettings().setDisplayZoomControls(false);
+		webView.getSettings().setDomStorageEnabled(true);*/
+
+		// Fixes broken full-screen modals/galleries due to body height being 0.
+		webView.setLayoutParams(
+				new LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT));
+		
+		return webView;
 	}
 
 	@Override
 	public Map getExportedCustomDirectEventTypeConstants() {
 		return MapBuilder.of(
-				"onStateChange", MapBuilder.of("registrationName", "onStateChange"));
+				"onStateChange", MapBuilder.of("registrationName", "onStateChange"),
+				"onTradeResult", MapBuilder.of("registrationName", "onTradeResult"));
 	}
 
 	@Override
@@ -138,7 +142,6 @@ public class AlibcTradeWebViewManager extends SimpleViewManager<WebView> {
 
 	@ReactProp(name = "param")
 	public void propSetParam(WebView view, ReadableMap param) {
-
 		mModule.showInWebView(view, new AlibcWebViewClient(), param);
 	}
 }

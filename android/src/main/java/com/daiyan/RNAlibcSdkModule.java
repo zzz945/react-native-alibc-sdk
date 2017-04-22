@@ -51,6 +51,7 @@ import android.webkit.WebViewClient;
 import android.webkit.WebChromeClient;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
+import java.util.List;
 import android.util.Log;
 
 public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
@@ -60,7 +61,7 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
 
   private final static String NOT_LOGIN = "not login";
   private final static String INVALID_TRADE_RESULT = "invalid trade result";
-  private final static String INVALID_PARAM = "invalid param";
+  private final static String INVALID_PARAM = "invalid";
 
   private Map<String, String> exParams;//yhhpass参数
   private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
@@ -247,7 +248,7 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
         event.putString("type", INVALID_PARAM);
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
                 webview.getId(),
-                "topChange",
+                "onTradeResult",
                 event);
         break;
     }
@@ -272,23 +273,24 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
                 event.putString("type", "card");
             }else if (tradeResult.resultType.equals(ResultType.TYPEPAY)){
                 event.putString("type", "pay");
-                event.putArray("orders", Arguments.fromArray(tradeResult.payResult.paySuccessOrders));
+                event.putString("orders", "" + tradeResult.payResult.paySuccessOrders);
             }else { 
-                event.putString("type", "no type");
+                event.putString("type", INVALID_PARAM);
             }
             reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
                     webview.getId(),
-                    "topChange",
+                    "onTradeResult",
                     event);
             }
           @Override
           public void onFailure(int code, String msg) {
             WritableMap event = Arguments.createMap();
+            event.putString("type", "error");
             event.putInt("code", code);
             event.putString("msg", msg);
             reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
                     webview.getId(),
-                    "topChange",
+                    "onTradeResult",
                     event);
           }
       });
@@ -314,7 +316,7 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
               //支付成功
               WritableMap map = Arguments.createMap();
               map.putString("type", "pay");
-              map.putArray("orders", Arguments.fromArray(tradeResult.payResult.paySuccessOrders));
+              map.putString("orders", "" + tradeResult.payResult.paySuccessOrders);
               callback.invoke(null, map);
             }else {
               callback.invoke(INVALID_TRADE_RESULT);
@@ -323,6 +325,7 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
           @Override
           public void onFailure(int code, String msg) {
             WritableMap map = Arguments.createMap();
+            map.putString("type", "error");
             map.putInt("code", code);
             map.putString("msg", msg);
             callback.invoke(msg);

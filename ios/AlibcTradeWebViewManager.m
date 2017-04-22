@@ -17,6 +17,8 @@ RCT_EXPORT_MODULE()
 - (UIView *)view
 {
     AlibcWebView *webView = [[AlibcWebView alloc] initWithFrame:CGRectZero];
+    webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    webView.scrollView.scrollEnabled = YES;
     webView.delegate = self;
     return webView;
 }
@@ -62,10 +64,9 @@ RCT_EXPORT_METHOD(reload:(nonnull NSNumber *)reactTag)
 }
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    //RCTLog(@"Loading URL :%@",request.URL.absoluteString);
+    RCTLog(@"Loading URL :%@",request.URL.absoluteString);
     NSString* url = request.URL.absoluteString;
-    if ([url hasPrefix:@"http://login.m.taobao.com/"] ||
-            [url hasPrefix:@"http://"]  ||
+    if ([url hasPrefix:@"http://"]  ||
             [url hasPrefix:@"https://"] ||
             [url hasPrefix:@"file://"]) {
         return YES;
@@ -78,7 +79,6 @@ RCT_EXPORT_METHOD(reload:(nonnull NSNumber *)reactTag)
 {
     webView.onStateChange(@{
                             @"loading": @(true),
-                            @"error": @(false),
                             @"canGoBack": @([webView canGoBack]),
                             });
 }
@@ -87,8 +87,8 @@ RCT_EXPORT_METHOD(reload:(nonnull NSNumber *)reactTag)
 {
     webView.onStateChange(@{
                             @"loading": @(false),
-                            @"error": @(false),
                             @"canGoBack": @([webView canGoBack]),
+                            @"title": [webView stringByEvaluatingJavaScriptFromString:@"document.title"],
                             });
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "AlibcSdkBridge.h"
+#import "AlibcWebView.h"
 #import <React/RCTLog.h>
 
 #define NOT_LOGIN (@"not login")
@@ -141,12 +142,12 @@
              callback(@[[NSNull null], ret]);
          }
      } tradeProcessFailedCallback:^(NSError * _Nullable error) {
-         NSDictionary *ret = @{@"code": @(error.code), @"msg":error.description};
+         NSDictionary *ret = @{@"type": @"error", @"code": @(error.code), @"msg":error.description};
          callback(@[ret]);
      }];
 }
 
-- (void)showInWebView: (UIWebView *)webView param:(NSDictionary *)param
+- (void)showInWebView: (AlibcWebView *)webView param:(NSDictionary *)param
 {
     NSString *type = param[@"type"];
     id<AlibcTradePage> page;
@@ -184,12 +185,21 @@
      trackParam:nil
      tradeProcessSuccessCallback:^(AlibcTradeResult * _Nullable result) {
          if (result.result == AlibcTradeResultTypeAddCard) {
-             NSDictionary *ret = @{@"type": @"card"};
+             ((AlibcWebView *)webView).onTradeResult(@{
+                                     @"type": @"card",
+                                     });
          } else if (result.result == AlibcTradeResultTypePaySuccess) {
-             NSDictionary *ret = @{@"type": @"pay", @"orders": result.payResult.paySuccessOrders};
+             ((AlibcWebView *)webView).onTradeResult(@{
+                                     @"type": @"pay",
+                                     @"orders": result.payResult.paySuccessOrders,
+                                     });
          }
      } tradeProcessFailedCallback:^(NSError * _Nullable error) {
-         NSDictionary *ret = @{@"code": @(error.code), @"msg":error.description};
+         ((AlibcWebView *)webView).onTradeResult(@{
+                                 @"type": @"error",
+                                 @"code": @(error.code),
+                                 @"msg": error.description,
+                                 });
      }];
 }
 

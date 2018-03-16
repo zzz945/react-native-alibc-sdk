@@ -1,4 +1,5 @@
-import React, { Component, PureComponent, PropTypes } from 'react';
+import React, { Component, PureComponent } from 'react';
+import PropTypes from 'prop-types'
 import {
   View,
   Button,
@@ -71,8 +72,8 @@ export class AlibcTradeWebView extends React.Component {
 
 AlibcTradeWebView.propTypes = {
   param: PropTypes.object,
-  onTradeResult: React.PropTypes.func,
-  onStateChange: React.PropTypes.func,
+  onTradeResult: PropTypes.func,
+  onStateChange: PropTypes.func,
   ...View.propTypes,
 };
 

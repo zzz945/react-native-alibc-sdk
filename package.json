@@ -1,6 +1,6 @@
 {
   "name": "react-native-alibc-sdk",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "React Native的阿里百川sdk， 包含淘宝授权登录等",
   "main": "index.js",
   "scripts": {

@@ -50,7 +50,7 @@
     [[AlibcTradeSDK sharedInstance] setTaokeParams:taokeParams];
     
     showParams = [[AlibcTradeShowParams alloc] init];
-    showParams.openType = AlibcOpenTypeAuto;
+    showParams.openType = forceH5 ? AlibcOpenTypeH5 : AlibcOpenTypeNative;
     
     //设置全局的app标识，在电商模块里等同于isv_code
     //没有申请过isv_code的接入方,默认不需要调用该函数

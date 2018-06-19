@@ -103,6 +103,9 @@ public class RNAlibcSdkModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void init(final String pid, final Boolean forceH5, final Callback callback) {
       this.alibcTaokeParams = new AlibcTaokeParams(pid, "", "");
+      this.alibcShowParams = new AlibcShowParams(
+        forceH5 ? OpenType.H5 : OpenType.Native, false
+      );
       AlibcTradeSDK.asyncInit(reactContext, new AlibcTradeInitCallback() {
         @Override
         public void onSuccess() {
